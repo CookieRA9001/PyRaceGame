@@ -1,0 +1,27 @@
+
+Tēma:
+	Mašīnas labošanu
+
+Projekta ideja:
+	Braukšanas spēle, kur tu labo un apgraido savu mašīnu ar naudu no braucieniem
+
+Lomas:
+	Ralfs A - Art, PM, ideas :), developer help, menus, delivery man
+	Ralfs M - Car shop?, auto corrector
+	Klāvs - Driving
+  	Edvards - Tester, developer help, auto corrector
+
+Plānošanas process :D
+	Get a racing game template
+		https://www.pygame.org/project/3617
+	Upgrade it with extra functions to match the project idea
+	Add a shop that will change the car class properties 
+	Make a Main Menu
+	Connect the different parts/modules
+	Add better art
+	Test it
+	Make a presentation
+	Present
+
+AAA
+https://github.com/techwithtim/Pygame-Car-Racer

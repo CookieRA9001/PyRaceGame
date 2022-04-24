@@ -15,7 +15,7 @@ player_car = NULL
 computer_car = NULL
 
 class Game:
-    def __init__(self, path, finish_pos, track, bg, border, finish, title, levels):
+    def __init__(self, path, finish_pos, track, bg, border, finish, title, levels, player_start_pos, com_start_pos, dificulty = 1, enemy_stats = (2,4,0.2)):
         pygame.font.init()
         self.PATH = path
         self.FINISH_POSITION = finish_pos
@@ -29,15 +29,21 @@ class Game:
         self.TITLE = title
         self.started = False
         self.level_start_time = 0
+        self.PLAYER_START_POS = player_start_pos
+        self.COMPUTER_STATY_POS = com_start_pos
+        self.dif = dificulty
 
         self.FINISH_MASK = pygame.mask.from_surface(self.FINISH)
         self.WIDTH, self.HEIGHT = self.TRACK.get_width(), self.TRACK.get_height()
         self.WIN = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         self.MAIN_FONT = pygame.font.SysFont("comicsans", 44)
+        self.COMPUTER_STATS = enemy_stats
 
     def start(self):
         global images
         pygame.display.set_caption(self.TITLE)
+        PlayerCar.START_POS = self.PLAYER_START_POS
+        ComputerCar.START_POS = self.COMPUTER_STATY_POS
 
         images = [(self.GRASS, (0, 0)), (self.TRACK, (0, 0)),
           (self.FINISH, self.FINISH_POSITION), (self.TRACK_BORDER, (0, 0))]
@@ -63,15 +69,18 @@ class Game:
             return 0
         return round(time.time() - self.level_start_time)
 
+GAMES = []
+CurentGame = NULL
+
 class AbstractCar:
-    def __init__(self, max_vel, rotation_vel):
+    def __init__(self, max_vel, rotation_vel, acceleration=0.1):
         self.img = self.IMG
         self.max_vel = max_vel
         self.vel = 0
         self.rotation_vel = rotation_vel
         self.angle = 0
         self.x, self.y = self.START_POS
-        self.acceleration = 0.1
+        self.acceleration = acceleration
 
     def rotate(self, left=False, right=False):
         if left:
@@ -111,19 +120,19 @@ class AbstractCar:
 
 class PlayerCar(AbstractCar):
     IMG = RED_CAR
-    START_POS = (180, 200)
+    START_POS = (0,0)
 
     def reduce_speed(self):
         self.vel = max(self.vel - self.acceleration / 2, 0)
         self.move()
 
     def bounce(self):
-        self.vel = -self.vel
+        self.vel = -self.vel * (1.1 - defaults.upgrades["bounc"]/10)
         self.move()
 
 class ComputerCar(AbstractCar):
     IMG = GREEN_CAR
-    START_POS = (150, 200)
+    START_POS = (0,0)
 
     def __init__(self, max_vel, rotation_vel, path=[]):
         super().__init__(max_vel, rotation_vel)
@@ -137,7 +146,6 @@ class ComputerCar(AbstractCar):
 
     def draw(self, win):
         super().draw(win)
-        # self.draw_points(win)
 
     def calculate_angle(self):
         target_x, target_y = self.path[self.current_point]
@@ -172,17 +180,18 @@ class ComputerCar(AbstractCar):
         if self.current_point >= len(self.path):
             return
 
-        self.calculate_angle()
         self.update_path_point()
+        self.calculate_angle()
         super().move()
-
-    def next_level(self, level):
-        self.reset()
-        self.vel = self.max_vel + (level - 1) * 0.2
+    
+    def reset(self):
+        super().reset()
         self.current_point = 0
+        self.vel = self.max_vel + (CurentGame.LEVEL - 1) * CurentGame.COMPUTER_STATS[2]
 
-GAMES = []
-CurentGame = NULL
+    def next_level(self):
+        self.reset()
+
 player_car = PlayerCar(4, 4)
 computer_car = ComputerCar(2, 4, [])
 
@@ -198,13 +207,17 @@ def init_game():
             scale_image(pygame.image.load("imgs/track-border.png"), 0.9),
             pygame.image.load("imgs/finish.png"),
             "Racing Game!",
-            10
+            5,
+            (180, 200),
+            (150, 200),
+            2,
+            (2,4,0.2)
         )
     ]
     CurentGame = GAMES[0]
     CurentGame.start()
-    player_car = PlayerCar(4, 4)
-    computer_car = ComputerCar(2, 4, CurentGame.PATH)
+    player_car = PlayerCar(defaults.upgrades["max_vel"]+2, defaults.upgrades["rotation_vel"]+1, defaults.upgrades["acceleration"]/10)
+    computer_car = ComputerCar(CurentGame.COMPUTER_STATS[0], CurentGame.COMPUTER_STATS[1], CurentGame.PATH)
 
 def draw(win, images, player_car, computer_car):
     for img, pos in images:
@@ -255,10 +268,9 @@ def handle_collision(player_car, computer_car):
     if computer_finish_poi_collide != None:
         blit_text_center(CurentGame.WIN, CurentGame.MAIN_FONT, "You lost!")
         pygame.display.update()
-        pygame.time.wait(5000)
-        CurentGame.reset()
-        player_car.reset()
-        computer_car.reset()
+        pygame.time.wait(3000)
+        defaults.money += CurentGame.dif*CurentGame.LEVEL*20
+        defaults.mode = defaults.MENU
 
     player_finish_poi_collide = player_car.collide(
         CurentGame.FINISH_MASK, *CurentGame.FINISH_POSITION)
@@ -268,7 +280,7 @@ def handle_collision(player_car, computer_car):
         else:
             CurentGame.next_level()
             player_car.reset()
-            computer_car.next_level(CurentGame.LEVEL)
+            computer_car.next_level()
 
 def play_game():
     clock.tick(defaults.fps)
@@ -284,7 +296,10 @@ def play_game():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
-                CurentGame.start_level()
+                if event.key == K_ESCAPE:
+                    defaults.mode = defaults.MENU
+                else:
+                    CurentGame.start_level()
 
     move_player(player_car)
     computer_car.move()
@@ -293,10 +308,8 @@ def play_game():
 
     if CurentGame.game_finished():
         blit_text_center(CurentGame.WIN, CurentGame.MAIN_FONT, "You won the game!")
-        pygame.time.wait(5000)
-        CurentGame.reset()
-        player_car.reset()
-        computer_car.reset()
-
+        pygame.time.wait(3000)
+        defaults.money += CurentGame.dif*CurentGame.END_LEVEL*30
+        defaults.mode = defaults.MENU
 
 pygame.quit()

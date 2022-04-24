@@ -212,9 +212,24 @@ def init_game():
             (150, 200),
             2,
             (2,4,0.2)
+        ),
+        Game(
+            [(175, 119), (110, 70), (56, 133), (70, 481), (318, 731), (404, 680), (418, 521), (507, 475), (600, 551), (613, 715), (736, 713),
+            (734, 399), (611, 357), (409, 343), (433, 257), (697, 258), (738, 123), (581, 71), (303, 78), (275, 377), (176, 388), (178, 260)],
+            (130, 250),
+            scale_image(pygame.image.load("imgs/track.png"), 0.9),
+            scale_image(pygame.image.load("imgs/grass2.jpg"), 2.5),
+            scale_image(pygame.image.load("imgs/track-border.png"), 0.9),
+            pygame.image.load("imgs/finish.png"),
+            "Racing Game!",
+            2,
+            (180, 200),
+            (150, 200),
+            1,
+            (2,3.5,0.1)
         )
     ]
-    CurentGame = GAMES[0]
+    CurentGame = GAMES[defaults.current_game]
     CurentGame.start()
     player_car = PlayerCar(defaults.upgrades["max_vel"]+2, defaults.upgrades["rotation_vel"]+1, defaults.upgrades["acceleration"]/10)
     computer_car = ComputerCar(CurentGame.COMPUTER_STATS[0], CurentGame.COMPUTER_STATS[1], CurentGame.PATH)
@@ -297,6 +312,7 @@ def play_game():
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == K_ESCAPE:
+                    CurentGame.start_level()
                     defaults.mode = defaults.MENU
                 else:
                     CurentGame.start_level()
@@ -307,7 +323,8 @@ def play_game():
     handle_collision(player_car, computer_car)
 
     if CurentGame.game_finished():
-        blit_text_center(CurentGame.WIN, CurentGame.MAIN_FONT, "You won the game!")
+        blit_text_center(CurentGame.WIN, CurentGame.MAIN_FONT, "You won the race!")
+        pygame.display.update()
         pygame.time.wait(3000)
         defaults.money += CurentGame.dif*CurentGame.END_LEVEL*30
         defaults.mode = defaults.MENU

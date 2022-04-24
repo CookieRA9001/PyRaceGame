@@ -14,8 +14,6 @@ def blit_rotate_center(win, image, top_left, angle):
 
 
 def blit_text_center(win, font, text):
-    if not defaults.run:
-        return 
     pygame.init() # fixes "Library not initialized" bug when closing game
     render = font.render(text, 1, (200, 200, 200))
     win.blit(render, (win.get_width()/2 - render.get_width() /

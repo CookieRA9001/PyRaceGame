@@ -22,13 +22,13 @@ def init_menu():
     global mainClock, screen, font
     mainClock = pygame.time.Clock()
     pygame.init()
-    pygame.display.set_caption('game base')
+    pygame.display.set_caption('Pick a track!')
     screen = pygame.display.set_mode((500, 500),0,32)
     font = pygame.font.SysFont(None, 20)
  
-def main_menu():
+def render():
     screen.fill((0,0,0))
-    draw_text('Python Race', font, (255, 255, 255), screen, 20, 20)
+    draw_text('Track Select', font, (255, 255, 255), screen, 20, 20)
 
     mx, my = pygame.mouse.get_pos()
 
@@ -37,15 +37,16 @@ def main_menu():
     
     if defaults.click:
         if button_1.collidepoint((mx, my)):
-            defaults.mode = defaults.TRACKS
+            defaults.current_game = 0
+            defaults.mode = defaults.GAME
         if button_2.collidepoint((mx, my)):
-            defaults.mode = defaults.SHOP
+            defaults.mode = defaults.MENU
     pygame.draw.rect(screen, (255, 0, 0), button_1)
-    draw_text('Play', font, (0, 0, 0), screen, 60, 120)
+    draw_text('Track 1 - Default', font, (0, 0, 0), screen, 60, 120)
     pygame.draw.rect(screen, (255, 0, 0), button_2)
-    draw_text('Shop', font, (0, 0, 0), screen, 60, 220)
+    draw_text('Back', font, (0, 0, 0), screen, 60, 220)
 
     pygame.display.update()
     mainClock.tick(defaults.fps)
  
-main_menu()
+render()

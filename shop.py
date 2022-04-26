@@ -58,7 +58,7 @@ def init_menu():
 
 	Upgrade.index = 0
 	UPGRADES = [
-		Upgrade("Max Speed", "max_vel", 100, 50, 10),
+		Upgrade("Max Speed", "max_vel", 100, 50, 5),
 		Upgrade("Anti-Bounc", "bounc", 100, 250, 5),
 		Upgrade("Drift Speed", "rotation_vel", 100, 100, 5),
 		Upgrade("Acceleration", "acceleration", 100, 150, 5),

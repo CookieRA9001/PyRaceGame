@@ -4,7 +4,7 @@ from pygame.locals import *
 import time
 import math
 import defaults
-from utils import scale_image, blit_rotate_center, blit_text_center
+from utils import scale_image, blit_rotate_center, blit_text_center, scale_image_WxH
 
 clock = pygame.time.Clock()
 images = []
@@ -42,8 +42,8 @@ class Game:
         PlayerCar.START_POS = self.PLAYER_START_POS
         ComputerCar.START_POS = self.COMPUTER_STATY_POS
 
-        images = [(self.GRASS, (0, 0)), (self.TRACK, (0, 0)),
-          (self.FINISH, self.FINISH_POSITION), (self.TRACK_BORDER, (0, 0))]
+        images = [(self.GRASS, (0, 0)), (self.TRACK_BORDER, (0, 0)), (self.TRACK, (0, 0)),
+          (self.FINISH, self.FINISH_POSITION)]
 
     def next_level(self):
         self.LEVEL += 1
@@ -204,7 +204,7 @@ def init_game():
             scale_image(pygame.image.load("imgs/grass.jpg"), 2.5),
             scale_image(pygame.image.load("imgs/track-border.png"), 0.9),
             pygame.image.load("imgs/finish.png"),
-            "Racing Game!",
+            "Default Track - 5 laps!",
             5,
             (180, 200),
             (150, 200),
@@ -219,7 +219,7 @@ def init_game():
             scale_image(pygame.image.load("imgs/grass2.jpg"), 2.5),
             scale_image(pygame.image.load("imgs/track-border.png"), 0.9),
             pygame.image.load("imgs/finish.png"),
-            "Racing Game!",
+            "Default Track - 2 laps!",
             2,
             (180, 200),
             (150, 200),
@@ -227,19 +227,34 @@ def init_game():
             (2,3.5,0.1)
         ),
 		Game(
-            [(175, 119), (110, 70), (56, 133), (70, 481), (318, 731), (404, 680), (418, 521), (507, 475), (600, 551), (613, 715), (736, 713),
-            (734, 399), (611, 357), (409, 343), (433, 257), (697, 258), (738, 123), (581, 71), (303, 78), (275, 377), (176, 388), (178, 260)],
-            (130, 250),
-            scale_image(pygame.image.load("imgs/Whaterfall-bg.png"), 2),
-            scale_image(pygame.image.load("imgs/grass.jpg"), 1),
-            scale_image(pygame.image.load("imgs/Whaterfall-border.png"), 2),
-            pygame.image.load("imgs/finish.png"),
-            "Racing Game!",
-            5,
-            (180, 200),
-            (150, 200),
-            2,
-            (2,4,0.2)
+            [(700, 500), (700, 366), (613, 362), (557, 315), (558, 242), (444, 240), (396, 186), (390, 54), (76, 46), (58, 82), (670, 696),
+            (700, 660), (700, 590)],
+            (669, 585),
+            scale_image(pygame.image.load("imgs/Whaterfall-bg.png"), 3),
+            pygame.image.load("imgs/grass.jpg"),
+            scale_image(pygame.image.load("imgs/Whaterfall-border.png"), 3),
+            scale_image_WxH(pygame.image.load("imgs/finish-line.png"),4,1),
+            "Waterfall [Borderless] - 3 laps!",
+            3,
+            (690, 550),
+            (710, 550),
+            4,
+            (2,8,0.6)
+        ),
+        Game(
+            [(700, 500), (700, 366), (613, 362), (557, 315), (558, 242), (444, 240), (396, 186), (390, 54), (76, 46), (58, 82), (670, 696),
+            (700, 660), (700, 590)],
+            (669, 585),
+            scale_image(pygame.image.load("imgs/Whaterfall-border.png"), 3),
+            scale_image(pygame.image.load("imgs/Whaterfall-bg.png"), 3),
+            scale_image(pygame.image.load("imgs/Whaterfall-border.png"), 3),
+            scale_image_WxH(pygame.image.load("imgs/finish-line.png"),4,1),
+            "Waterfall - 3 laps!",
+            3,
+            (690, 550),
+            (710, 550),
+            3,
+            (2.2,8,0.6)
         )
     ]
     CurentGame = GAMES[defaults.current_game]

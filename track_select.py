@@ -34,6 +34,7 @@ def render():
 
     button_1 = pygame.Rect(50, 100, 200, 50)
     button_2 = pygame.Rect(50, 180, 200, 50)
+    button_3 = pygame.Rect(50, 260, 200, 50)
     
     if defaults.click:
         if button_1.collidepoint((mx, my)):
@@ -42,11 +43,16 @@ def render():
         if button_2.collidepoint((mx, my)):
             defaults.current_game = 1
             defaults.mode = defaults.GAME
+        if button_3.collidepoint((mx, my)):
+            defaults.current_game = 2
+            defaults.mode = defaults.GAME
 
     pygame.draw.rect(screen, (255, 0, 0), button_1)
     draw_text('Defaut Track - Dif: 2 Laps: 5', font, (0, 0, 0), screen, 60, 120)
     pygame.draw.rect(screen, (255, 0, 0), button_2)
     draw_text('Test Track - Dif: 1 Laps: 2', font, (0, 0, 0), screen, 60, 200)
+    pygame.draw.rect(screen, (255, 0, 0), button_3)
+    draw_text('Waterfall - Dif: 2 Laps: 3', font, (0, 0, 0), screen, 60, 280)
 
     pygame.display.update()
     mainClock.tick(defaults.fps)

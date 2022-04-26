@@ -23,5 +23,4 @@ Plānošanas process :D
 	Make a presentation
 	Present
 
-AAA
 https://github.com/techwithtim/Pygame-Car-Racer

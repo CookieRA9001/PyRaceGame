@@ -1,13 +1,10 @@
-from asyncio.windows_events import NULL
+NULL = 0
 import pygame, sys
 from pygame.locals import *
 import time
 import math
 import defaults
 from utils import scale_image, blit_rotate_center, blit_text_center
-
-RED_CAR = scale_image(pygame.image.load("imgs/red-car.png"), 0.55)
-GREEN_CAR = scale_image(pygame.image.load("imgs/green-car.png"), 0.55)
 
 clock = pygame.time.Clock()
 images = []
@@ -119,7 +116,7 @@ class AbstractCar:
         self.vel = 0
 
 class PlayerCar(AbstractCar):
-    IMG = RED_CAR
+    IMG = scale_image(pygame.image.load("imgs/car1.png"), 0.5)
     START_POS = (0,0)
 
     def reduce_speed(self):
@@ -131,66 +128,67 @@ class PlayerCar(AbstractCar):
         self.move()
 
 class ComputerCar(AbstractCar):
-    IMG = GREEN_CAR
-    START_POS = (0,0)
+	IMG = scale_image(pygame.image.load("imgs/car2.png"), 0.5)
+	START_POS = (0,0)
 
-    def __init__(self, max_vel, rotation_vel, path=[]):
-        super().__init__(max_vel, rotation_vel)
-        self.path = path
-        self.current_point = 0
-        self.vel = max_vel
+	def __init__(self, max_vel, rotation_vel, path=[], car_image="imgs/car2.png"):
+		super().__init__(max_vel, rotation_vel)
+		self.path = path
+		self.current_point = 0
+		self.vel = max_vel
+		ComputerCar.IMG = scale_image(pygame.image.load(car_image), 0.5)
 
-    def draw_points(self, win):
-        for point in self.path:
-            pygame.draw.circle(win, (255, 0, 0), point, 5)
+	def draw_points(self, win):
+		for point in self.path:
+			pygame.draw.circle(win, (255, 0, 0), point, 5)
 
-    def draw(self, win):
-        super().draw(win)
+	def draw(self, win):
+		super().draw(win)
 
-    def calculate_angle(self):
-        target_x, target_y = self.path[self.current_point]
-        x_diff = target_x - self.x
-        y_diff = target_y - self.y
+	def calculate_angle(self):
+		target_x, target_y = self.path[self.current_point]
+		x_diff = target_x - self.x
+		y_diff = target_y - self.y
 
-        if y_diff == 0:
-            desired_radian_angle = math.pi / 2
-        else:
-            desired_radian_angle = math.atan(x_diff / y_diff)
+		if y_diff == 0:
+			desired_radian_angle = math.pi / 2
+		else:
+			desired_radian_angle = math.atan(x_diff / y_diff)
 
-        if target_y > self.y:
-            desired_radian_angle += math.pi
+		if target_y > self.y:
+			desired_radian_angle += math.pi
 
-        difference_in_angle = self.angle - math.degrees(desired_radian_angle)
-        if difference_in_angle >= 180:
-            difference_in_angle -= 360
+		difference_in_angle = self.angle - math.degrees(desired_radian_angle)
+		if difference_in_angle >= 180:
+			difference_in_angle -= 360
 
-        if difference_in_angle > 0:
-            self.angle -= min(self.rotation_vel, abs(difference_in_angle))
-        else:
-            self.angle += min(self.rotation_vel, abs(difference_in_angle))
+		if difference_in_angle > 0:
+			self.angle -= min(self.rotation_vel, abs(difference_in_angle))
+		else:
+			self.angle += min(self.rotation_vel, abs(difference_in_angle))
 
-    def update_path_point(self):
-        target = self.path[self.current_point]
-        rect = pygame.Rect(
-            self.x, self.y, self.img.get_width(), self.img.get_height())
-        if rect.collidepoint(*target):
-            self.current_point += 1
+	def update_path_point(self):
+		target = self.path[self.current_point]
+		rect = pygame.Rect(
+			self.x, self.y, self.img.get_width(), self.img.get_height())
+		if rect.collidepoint(*target):
+			self.current_point += 1
 
-    def move(self):
-        if self.current_point >= len(self.path):
-            return
+	def move(self):
+		if self.current_point >= len(self.path):
+			return
 
-        self.update_path_point()
-        self.calculate_angle()
-        super().move()
+		self.update_path_point()
+		self.calculate_angle()
+		super().move()
     
-    def reset(self):
-        super().reset()
-        self.current_point = 0
-        self.vel = self.max_vel + (CurentGame.LEVEL - 1) * CurentGame.COMPUTER_STATS[2]
+	def reset(self):
+		super().reset()
+		self.current_point = 0
+		self.vel = self.max_vel + (CurentGame.LEVEL - 1) * CurentGame.COMPUTER_STATS[2]
 
-    def next_level(self):
-        self.reset()
+	def next_level(self):
+		self.reset()
 
 player_car = PlayerCar(4, 4)
 computer_car = ComputerCar(2, 4, [])
@@ -227,6 +225,21 @@ def init_game():
             (150, 200),
             1,
             (2,3.5,0.1)
+        ),
+		Game(
+            [(175, 119), (110, 70), (56, 133), (70, 481), (318, 731), (404, 680), (418, 521), (507, 475), (600, 551), (613, 715), (736, 713),
+            (734, 399), (611, 357), (409, 343), (433, 257), (697, 258), (738, 123), (581, 71), (303, 78), (275, 377), (176, 388), (178, 260)],
+            (130, 250),
+            scale_image(pygame.image.load("imgs/Whaterfall-bg.png"), 2),
+            scale_image(pygame.image.load("imgs/grass.jpg"), 1),
+            scale_image(pygame.image.load("imgs/Whaterfall-border.png"), 2),
+            pygame.image.load("imgs/finish.png"),
+            "Racing Game!",
+            5,
+            (180, 200),
+            (150, 200),
+            2,
+            (2,4,0.2)
         )
     ]
     CurentGame = GAMES[defaults.current_game]

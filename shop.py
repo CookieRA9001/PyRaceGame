@@ -5,6 +5,7 @@ from button import Button, ShopButton
 # Setup pygame/window ---------------------------------------- #
 from pygame.locals import *
 import defaults
+from utils import scale_image
 
 mainClock = pygame.time.Clock()
 pygame.init()
@@ -19,10 +20,10 @@ def init_menu():
 	font = pygame.font.SysFont(None, 20)
 
 	UPGRADES = [
-		ShopButton(160, 'Max Speed', 'max_vel', 100, 50, 5),
-		ShopButton(220, 'Anti-Bounc', 'bounc', 100, 250, 5),
-		ShopButton(280, 'Drift Speed', 'rotation_vel', 100, 100, 5),
-		ShopButton(340, 'Acceleration', 'acceleration', 100, 150, 5)
+		ShopButton(160, 'Max Speed', 'max_vel', 100, 50, 5, scale_image(pygame.image.load("imgs/upgrades3.png"), 3)),
+		ShopButton(220, 'Anti-Bounc', 'bounc', 100, 250, 5, scale_image(pygame.image.load("imgs/upgrades2.png"), 3)),
+		ShopButton(280, 'Drift Speed', 'rotation_vel', 100, 100, 5, scale_image(pygame.image.load("imgs/upgrades1.png"), 3)),
+		ShopButton(340, 'Acceleration', 'acceleration', 100, 150, 5, scale_image(pygame.image.load("imgs/upgrades4.png"), 3))
 	]
 	Button.init_class(font, screen, UPGRADES)
  

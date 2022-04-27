@@ -72,13 +72,14 @@ class GameButton(Button):
 			defaults.mode = defaults.GAME
 	
 class ShopButton(Button):
-	def __init__(self, y, text, atr, start_price, increse, max_lv):
+	def __init__(self, y, text, atr, start_price, increse, max_lv, upgrade_image):
 		self.title = text
 		self.atr = atr
 		self.start_price = start_price
 		self.increse = increse
 		self.max_lv = max_lv
 		self.level = defaults.upgrades[self.atr]
+		self.upgrade_image = upgrade_image
 		super().__init__(y, text)
 	
 	def click(self):
@@ -90,8 +91,18 @@ class ShopButton(Button):
 					defaults.upgrades[self.atr] += 1
 
 	def render(self):
+		if self.rect.collidepoint(Button.MOUSE_POS):
+			Button.SCREEN.blit(self.upgrade_image, (350, 200))
+			if defaults.click:
+				Button.SCREEN.blit(Button.BUTTON_IMG_CLICKED, (50, self.y))
+			else:
+				Button.SCREEN.blit(Button.BUTTON_IMG_HOVER, (50, self.y))
+		else:
+			Button.SCREEN.blit(Button.BUTTON_IMG_BASIC, (50, self.y))
+			
 		if self.level < self.max_lv:
 			self.text = self.title + " " + str(self.start_price+(self.level-1)*self.increse) + "$ Lv:" + str(self.level)
 		else:
 			self.text = self.title + " - Max Lv:" + str(self.level)
-		super().render()
+		
+		Button.draw_text(self.text, (95, 205, 228), Button.SCREEN, 70, self.y+20)

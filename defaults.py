@@ -11,6 +11,7 @@ fps = 30
 current_game = 0
 money = 0
 background_color = (48, 55, 62)
+car_scaler = 0.75
 
 upgrades = {
 	"max_vel": 1,

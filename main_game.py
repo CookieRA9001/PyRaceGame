@@ -4,7 +4,7 @@ from pygame.locals import *
 import time
 import math
 import defaults
-from utils import scale_image, blit_rotate_center, blit_text_center, scale_image_WxH
+from utils import *
 
 clock = pygame.time.Clock()
 images = []
@@ -38,6 +38,8 @@ class Game:
 
     def start(self):
         global images
+        self.WIDTH, self.HEIGHT = self.TRACK.get_width(), self.TRACK.get_height()
+        self.WIN = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         pygame.display.set_caption(self.TITLE)
         PlayerCar.START_POS = self.PLAYER_START_POS
         ComputerCar.START_POS = self.COMPUTER_STATY_POS
@@ -116,7 +118,7 @@ class AbstractCar:
         self.vel = 0
 
 class PlayerCar(AbstractCar):
-    IMG = scale_image(pygame.image.load("imgs/car1.png"), 0.5)
+    IMG = scale_image(pygame.image.load("imgs/car1.png"), defaults.car_scaler)
     START_POS = (0,0)
 
     def reduce_speed(self):
@@ -128,7 +130,7 @@ class PlayerCar(AbstractCar):
         self.move()
 
 class ComputerCar(AbstractCar):
-	IMG = scale_image(pygame.image.load("imgs/car2.png"), 0.5)
+	IMG = scale_image(pygame.image.load("imgs/car2.png"), defaults.car_scaler)
 	START_POS = (0,0)
 
 	def __init__(self, max_vel, rotation_vel, path=[], car_image="imgs/car2.png"):
@@ -136,7 +138,7 @@ class ComputerCar(AbstractCar):
 		self.path = path
 		self.current_point = 0
 		self.vel = max_vel
-		ComputerCar.IMG = scale_image(pygame.image.load(car_image), 0.5)
+		ComputerCar.IMG = scale_image(pygame.image.load(car_image), defaults.car_scaler)
 
 	def draw_points(self, win):
 		for point in self.path:
@@ -199,11 +201,11 @@ def init_game():
         Game(
             [(175, 119), (110, 70), (56, 133), (70, 481), (318, 731), (404, 680), (418, 521), (507, 475), (600, 551), (613, 715), (736, 713),
             (734, 399), (611, 357), (409, 343), (433, 257), (697, 258), (738, 123), (581, 71), (303, 78), (275, 377), (176, 388), (178, 260)],
-            (130, 250),
-            scale_image(pygame.image.load("imgs/track.png"), 1),
-            scale_image(pygame.image.load("imgs/grass.jpg"), 2),
-            scale_image(pygame.image.load("imgs/track-border.png"), 1),
-            pygame.image.load("imgs/finish.png"),
+            (142, 250),
+            scale_image(pygame.image.load("imgs/track.png"), 0.9),
+            scale_image(pygame.image.load("imgs/grass.jpg"), 3),
+            scale_image(pygame.image.load("imgs/track-border.png"), 0.9),
+            scale_image_WxH(pygame.image.load("imgs/finish-line.png"),4.4,1),
             "Default Track - 5 laps!",
             5,
             (180, 200),
@@ -214,11 +216,11 @@ def init_game():
         Game(
             [(175, 119), (110, 70), (56, 133), (70, 481), (318, 731), (404, 680), (418, 521), (507, 475), (600, 551), (613, 715), (736, 713),
             (734, 399), (611, 357), (409, 343), (433, 257), (697, 258), (738, 123), (581, 71), (303, 78), (275, 377), (176, 388), (178, 260)],
-            (130, 250),
-            scale_image(pygame.image.load("imgs/track.png"), 1),
-            scale_image(pygame.image.load("imgs/grass2.jpg"), 2),
-            scale_image(pygame.image.load("imgs/track-border.png"), 1),
-            pygame.image.load("imgs/finish.png"),
+            (142, 250),
+            scale_image(pygame.image.load("imgs/track.png"), 0.9),
+            scale_image(pygame.image.load("imgs/grass2.jpg"), 3),
+            scale_image(pygame.image.load("imgs/track-border.png"), 0.9),
+            scale_image_WxH(pygame.image.load("imgs/finish-line.png"),4.4,1),
             "Default Track - 2 laps!",
             2,
             (180, 200),
@@ -236,8 +238,8 @@ def init_game():
             scale_image_WxH(pygame.image.load("imgs/finish-line.png"),4,1),
             "Waterfall [Borderless] - 3 laps!",
             3,
-            (690, 550),
-            (710, 550),
+            (675, 540),
+            (705, 540),
             4,
             (2,8,0.6)
         ),
@@ -251,8 +253,8 @@ def init_game():
             scale_image_WxH(pygame.image.load("imgs/finish-line.png"),4,1),
             "Waterfall - 3 laps!",
             3,
-            (690, 550),
-            (710, 550),
+            (675, 540),
+            (705, 540),
             3,
             (2.2,8,0.6)
         )

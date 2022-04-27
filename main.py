@@ -1,7 +1,8 @@
 import main_game, track_select, main_menu, shop
 import pygame, sys
-import defaults
+import defaults, utils
 from pygame.locals import *
+pygame.display.set_icon(pygame.image.load("imgs/Title.png"))
 
 while defaults.run:
 	defaults.click = False
